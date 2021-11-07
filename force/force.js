@@ -11,6 +11,8 @@ var simulation = d3.forceSimulation()
     .force("charge", d3.forceManyBody())
     .force("center", d3.forceCenter(width / 2, height / 2));
 
+ var color = d3.schemeCategory10();
+
 d3.json("force/force.json", function (error, graph) {
     if (error) throw error;
 
@@ -26,6 +28,10 @@ d3.json("force/force.json", function (error, graph) {
         .data(graph.nodes)
         .enter().append("circle")
         .attr("r", 5)
+        .style("fill", function(d) {
+             // The node color depends on the type.
+             return color(d.type);
+        })
         .call(d3.drag()
             .on("start", dragstarted)
             .on("drag", dragged)

@@ -18,14 +18,18 @@ def graph(recursive_depth=0, binary_label=""):
     G = nx.DiGraph()
     dico = dict_add({})
     print(f"current position in tree: {recursive_depth}{binary_label}")
-    component = input("Component to add: ")
+    component = input("Component to add (A or D): ")
 
     node_id = f"{recursive_depth}{binary_label}"
 
     if component == "A":
-        theta = float(input("theta (as a fraction of pi): "))*np.pi
-        phi = float(input("phi (as a fraction of pi): "))*np.pi
-        orientation = (theta, phi)
+        component_to_angles = {"X":(np.pi/2, 0), "Y":(np.pi/2, np.pi/2), "Z":(0, np.pi)}
+        orientation = input("Analyzer orientation (X, Y, Z or angles): ")
+        if orientation in ("X", "Y", "Z"):
+            orientation = component_to_angles[orientation]
+        else:
+            liste = orientation.split()
+            orientation = (float(liste[0]), float(liste[1]))
         recursive_depth_next = recursive_depth + 1
 
         G.add_node(node_id)
@@ -76,9 +80,9 @@ def build_json(spinor=(1,0)):
     for n in G:
         G.nodes[n]["display"] = str(data[n])
         if isinstance(data[n], tuple):
-            G.nodes[n]["type"] = "A"
+            G.nodes[n]["type"] = 0
         elif isinstance(data[n], float):
-            G.nodes[n]["type"] = "D"
+            G.nodes[n]["type"] = 1
     # write json formatted data
     d = nx.json_graph.node_link_data(G)  # node-link format to serialize
     # write json

@@ -11,17 +11,9 @@ import json
 
 import flask
 import networkx as nx
-from graph import graph, local_computation
+from graph import build_json
 
-# this d3 example uses the name attribute for the mouse-hover value,
-# so add a name to each node
-for n in G:
-    G.nodes[n]["name"] = n
-# write json formatted data
-d = nx.json_graph.node_link_data(G)  # node-link format to serialize
-# write json
-json.dump(d, open("force/force.json", "w"))
-print("Wrote node-link JSON data to force/force.json")
+build_json()
 
 # Serve the file over http to allow for cross origin requests
 app = flask.Flask(__name__, static_folder="force")
