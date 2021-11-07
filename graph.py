@@ -1,5 +1,6 @@
 import networkx as nx
 import numpy as np
+import json
 import matplotlib.pyplot as plt
 from physics import spinor, analyzer
 from itertools import chain
@@ -66,3 +67,19 @@ def local_computation(spinor, P_in, G, dico_orientation, node_id="0"):
             dico_probability += local_computation(*output["down"], G, dico_orientation, node_id)
 
     return dico_probability
+
+
+def build_json(spinor=(1,0)):
+    G, dico_orientation = graph()
+    dico_probability = local_computation(spinor, 1, G, dico_orientation)
+    data = dico_orientation + dico_probability
+    for n in G:
+        G.nodes[n]["display"] = str(data[n])
+        if isinstance(data[n], tuple):
+            G.nodes[n]["type"] = "A"
+        elif isinstance(data[n], float):
+            G.nodes[n]["type"] = "D"
+    # write json formatted data
+    d = nx.json_graph.node_link_data(G)  # node-link format to serialize
+    # write json
+    json.dump(d, open("force/force.json", "w"))

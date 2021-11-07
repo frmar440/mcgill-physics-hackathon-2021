@@ -11,9 +11,8 @@ import json
 
 import flask
 import networkx as nx
-from graph import graph
+from graph import graph, local_computation
 
-G, _ = graph()
 # this d3 example uses the name attribute for the mouse-hover value,
 # so add a name to each node
 for n in G:
